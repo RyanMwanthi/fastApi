@@ -22,6 +22,12 @@ def find_post(id):
     for p in my_posts:
         if p['id'] == id:
             return p  # return the specific post
+        
+def find_index_post(id):
+    for i, p in enumerate(my_posts):
+        if p["id"] == id:
+            return i
+      
 
 
 
@@ -54,3 +60,14 @@ def get_post(id:int,responce:Response):
 
     return{"personal_details": post}
 #title str contnet str Category Bool
+
+@app.delete("/posts/{id}",status_code=status.HTTP_204_NO_CONTENT)
+def delete_post(id:int):
+    #deleting post
+    #find the index in the array that has the required id
+    #change the status code to a 204
+    index = find_index_post(id)
+    if index == None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail= f"post with id:{id} does not exist")
+    my_posts.pop(index)
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
